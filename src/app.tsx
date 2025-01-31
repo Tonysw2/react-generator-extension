@@ -1,3 +1,5 @@
+import { fakerPT_BR as faker } from '@faker-js/faker'
+import { Cog, Copy } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from './components/ui/button'
 import {
@@ -8,22 +10,36 @@ import {
   CardTitle,
 } from './components/ui/card'
 import { Input } from './components/ui/input'
-import { brazilAreaCodes } from './const/brazil-area-codes'
+import { Label } from './components/ui/label'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from './components/ui/tooltip'
+
+type TabsOptions = 'person' | 'address'
 
 export function App() {
-  const [inputValue, setInputValue] = useState('')
+  const [activeTab, setActiveTab] = useState<TabsOptions>('person')
+  const [cellphone, setCellphone] = useState('')
 
-  function generateBrazilianCellphone() {
-    const areaCode =
-      brazilAreaCodes[Math.floor(Math.random() * brazilAreaCodes.length)]
+  function handleGenerateCellphone() {
+    const formattedNumber = faker.phone
+      .number({ style: 'national' })
+      .replace(/(?<=\(\d{2}\)\s)(\d{4,5})(?=-)/g, (match) =>
+        match.length === 4 ? `9${match}` : `9${match.slice(1)}`,
+      )
+    setCellphone(formattedNumber)
+  }
 
-    const number = `9${Math.floor(10000000 + Math.random() * 90000000)}`
-
-    setInputValue(`(${areaCode}) ${number.slice(0, 4)}-${number.slice(4)}`)
+  function handleCopyGeneratedCellphone() {
+    navigator.clipboard.writeText(cellphone)
   }
 
   return (
-    <Card className="max-w-xl">
+    <Card className="w-full border-none">
       <CardHeader>
         <CardTitle>🚀 DataGenie – Quick Data Generator</CardTitle>
         <CardDescription>
@@ -33,20 +49,68 @@ export function App() {
       </CardHeader>
 
       <CardContent>
-        <div className="grid gap-2">
-          <Input
-            type="text"
-            value={inputValue}
-            readOnly
-          />
+        <Tabs
+          className="w-full"
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as TabsOptions)}
+        >
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="person">Person</TabsTrigger>
+            <TabsTrigger value="address">Address</TabsTrigger>
+          </TabsList>
 
-          <Button
-            type="button"
-            onClick={generateBrazilianCellphone}
-          >
-            Generate
-          </Button>
-        </div>
+          <TabsContent value="person">
+            <div className="mt-5 grid grid-cols-[1fr_min-content_min-content] items-end gap-2">
+              <div className="grid gap-1">
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  readOnly
+                  id="phone"
+                  type="text"
+                  value={cellphone}
+                />
+              </div>
+
+              <TooltipProvider>
+                <Tooltip delayDuration={100}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="outline"
+                      onClick={handleGenerateCellphone}
+                    >
+                      <Cog className="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+
+                  <TooltipContent className="border bg-background">
+                    <p>Generate</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <Tooltip delayDuration={100}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      size="icon"
+                      variant="secondary"
+                      onClick={handleCopyGeneratedCellphone}
+                    >
+                      <Copy className="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+
+                  <TooltipContent className="border bg-background">
+                    <p>Copy</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   )
