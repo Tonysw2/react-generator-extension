@@ -1,20 +1,13 @@
 import { mappedBrazilAreaCodes } from '@/const/brazil-area-codes'
-import { brazilStates } from '@/const/brazil-states'
 import { Check, Copy } from 'lucide-react'
 import { useRef, useState } from 'react'
+import { StateCombobox } from './combobox'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from './ui/select'
 import { TabsContent } from './ui/tabs'
 
 export function PhoneTab() {
-  const [state, setState] = useState<string>()
+  const [state, setState] = useState('')
   const [cellphone, setCellphone] = useState('')
   const [copiedSuccessfully, setCopiedSuccessfully] = useState(false)
 
@@ -62,25 +55,10 @@ export function PhoneTab() {
   return (
     <TabsContent value="phone">
       <div className="mt-5 grid gap-2">
-        <Select
-          value={state}
-          onValueChange={setState}
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="State" />
-          </SelectTrigger>
-
-          <SelectContent>
-            {brazilStates.map((item) => (
-              <SelectItem
-                key={item.symbol}
-                value={item.symbol}
-              >
-                {item.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <StateCombobox
+          state={state}
+          onStateChange={setState}
+        />
 
         <div className="relative">
           <Input
