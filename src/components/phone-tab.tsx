@@ -1,4 +1,5 @@
-import { mappedBrazilAreaCodes } from '@/const/brazil-area-codes'
+import { cn } from '@/lib/utils'
+import { PhoneGenerator } from '@/services/phone-generator'
 import { Check, Copy } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { StateCombobox } from './combobox'
@@ -13,6 +14,8 @@ export function PhoneTab() {
 
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
 
+  const phoneGenerator = new PhoneGenerator()
+
   function generateBrazilianCellphone(formatted = true) {
     return () => {
       setCopiedSuccessfully(false)
@@ -22,18 +25,10 @@ export function PhoneTab() {
         timeoutIdRef.current = null
       }
 
-      const areaCodes =
-        mappedBrazilAreaCodes.get(state ?? '') ??
-        Array.from(mappedBrazilAreaCodes.values()).flat()
-
-      const areaCode = areaCodes[Math.floor(Math.random() * areaCodes.length)]
-
-      const number = `9${Math.floor(10000000 + Math.random() * 90000000)}`
+      phoneGenerator.generate(state)
 
       setCellphone(
-        formatted
-          ? `(${areaCode}) ${number.slice(0, 5)}-${number.slice(5)}`
-          : `${areaCode}${number}`,
+        formatted ? phoneGenerator.getFormatted() : phoneGenerator.getRaw(),
       )
     }
   }
@@ -71,13 +66,20 @@ export function PhoneTab() {
             type="button"
             disabled={cellphone.length === 0}
             onClick={handleCopyGeneratedCellphone}
-            className="-translate-y-1/2 absolute top-1/2 right-3 transition-all hover:disabled:scale-1 [&:not(:disabled)]:hover:scale-125"
+            className="group -translate-y-1/2 absolute top-1/2 right-3 transition-all duration-300 hover:disabled:scale-1 [&:not(:disabled)]:hover:scale-125"
           >
-            {copiedSuccessfully ? (
-              <Check className="size-4 stroke-green-500" />
-            ) : (
-              <Copy className="size-4" />
-            )}
+            <Check
+              className={cn(
+                'size-4 stroke-green-500',
+                copiedSuccessfully ? 'block' : 'hidden',
+              )}
+            />
+            <Copy
+              className={cn(
+                'size-4 stroke-foreground transition-colors group-disabled:stroke-muted',
+                !copiedSuccessfully ? 'block' : 'hidden',
+              )}
+            />
           </button>
         </div>
 
@@ -87,7 +89,7 @@ export function PhoneTab() {
             className="w-full"
             onClick={generateBrazilianCellphone()}
           >
-            Generate formatted
+            Gerar formatado
           </Button>
 
           <Button
@@ -96,7 +98,7 @@ export function PhoneTab() {
             className="w-full"
             onClick={generateBrazilianCellphone(false)}
           >
-            Generate raw
+            Gerar sem formatação
           </Button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-const brazilAreaCodes: { [key: string]: number[] }[] = [
+export const brazilAreaCodes: { [key: string]: number[] }[] = [
   { SP: [11, 12, 13, 14, 15, 16, 17, 18, 19] },
   { RJ: [21, 22, 24] },
   { ES: [27, 28] },
@@ -26,7 +26,3 @@ const brazilAreaCodes: { [key: string]: number[] }[] = [
   { MT: [65, 66] },
   { MS: [67] },
 ]
-
-export const mappedBrazilAreaCodes = new Map(
-  brazilAreaCodes.flatMap((state) => Object.entries(state)),
-)

@@ -31,8 +31,8 @@ export function App() {
           onValueChange={(value) => setActiveTab(value as TabsOptions)}
         >
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="phone">Phone</TabsTrigger>
-            <TabsTrigger value="address">Address</TabsTrigger>
+            <TabsTrigger value="phone">Celular</TabsTrigger>
+            <TabsTrigger value="address">Endereço</TabsTrigger>
           </TabsList>
 
           <PhoneTab />

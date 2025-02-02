@@ -38,7 +38,8 @@
       },
 
       "style": {
-        "noNonNullAssertion": "warn"
+        "noNonNullAssertion": "warn",
+        "useExponentiationOperator": "off"
       },
 
       "nursery": {
