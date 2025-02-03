@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { PhoneGenerator } from '@/services/phone-generator'
+import { PhoneGenerator, type PhoneStyle } from '@/services/phone-generator'
 import { Check, Copy } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { StateCombobox } from './combobox'
@@ -14,9 +14,7 @@ export function PhoneTab() {
 
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
 
-  const phoneGenerator = new PhoneGenerator()
-
-  function generateBrazilianCellphone(formatted = true) {
+  function generateBrazilianCellphone(style: PhoneStyle) {
     return () => {
       setCopiedSuccessfully(false)
 
@@ -25,11 +23,7 @@ export function PhoneTab() {
         timeoutIdRef.current = null
       }
 
-      phoneGenerator.generate(state)
-
-      setCellphone(
-        formatted ? phoneGenerator.getFormatted() : phoneGenerator.getRaw(),
-      )
+      setCellphone(PhoneGenerator.generate({ state, style }))
     }
   }
 
@@ -83,22 +77,31 @@ export function PhoneTab() {
           </button>
         </div>
 
-        <div className="flex gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <Button
             type="button"
             className="w-full"
-            onClick={generateBrazilianCellphone()}
+            onClick={generateBrazilianCellphone('national')}
           >
-            Gerar formatado
+            Nacional
           </Button>
 
           <Button
             type="button"
             variant="secondary"
             className="w-full"
-            onClick={generateBrazilianCellphone(false)}
+            onClick={generateBrazilianCellphone('international')}
           >
-            Gerar sem formatação
+            Internacional
+          </Button>
+
+          <Button
+            type="button"
+            variant="secondary"
+            className="w-full"
+            onClick={generateBrazilianCellphone('raw')}
+          >
+            Sem máscara
           </Button>
         </div>
       </div>

@@ -1,56 +1,56 @@
 import { brazilAreaCodes } from '@/const/brazil-area-codes'
+import { faker } from '@faker-js/faker'
+
+export type PhoneStyle = 'raw' | 'national' | 'international'
+
+type GenerateNumberParams = {
+  state: string
+  style?: PhoneStyle
+}
 
 export class PhoneGenerator {
-  private value: string | null = null
-  private areaCode: number | null = null
-  private areaCodes: Map<string, number[]>
+  private static areaCodes = new Map(
+    brazilAreaCodes.flatMap((state) => Object.entries(state)),
+  )
 
-  constructor() {
-    this.areaCodes = new Map(
-      brazilAreaCodes.flatMap((state) => Object.entries(state)),
-    )
-  }
-
-  private getAreaCode(state: string) {
+  private static getAreaCode(state: string) {
     const areaCodes =
-      this.areaCodes.get(state) ?? Array.from(this.areaCodes.values()).flat()
+      PhoneGenerator.areaCodes.get(state) ??
+      Array.from(PhoneGenerator.areaCodes.values()).flat()
 
-    this.areaCode =
+    const areaCode =
       areaCodes.at(Math.round(Math.random() * areaCodes.length - 1)) ?? null
 
-    return this.areaCode
+    return areaCode
   }
 
-  generate(state?: string) {
-    const digits = 8
+  static generate({ state, style = 'national' }: GenerateNumberParams) {
+    const areaCode = PhoneGenerator.getAreaCode(state)
 
-    const min = Math.pow(10, digits - 1)
-    const max = Math.pow(10, digits) - 1
+    if (style === 'raw') {
+      const phoneNumber = faker.helpers.fromRegExp(
+        `${areaCode}9[1-9]{4}[1-9]{4}`,
+      )
 
-    const number = Math.floor(Math.random() * (max - min + 1) + min)
-      .toString()
-      .padStart(9, '9')
-
-    const areaCode = this.getAreaCode(state ?? '')
-
-    const phoneNumber = `${areaCode}${number}`
-
-    this.value = phoneNumber
-  }
-
-  getRaw() {
-    if (!this.value) {
-      throw 'You must generate a number before'
+      return phoneNumber
     }
 
-    return this.value
-  }
+    if (style === 'national') {
+      const phoneNumber = faker.helpers.fromRegExp(
+        `(${areaCode}) 9[1-9]{4}-[1-9]{4}`,
+      )
 
-  getFormatted() {
-    if (!this.value) {
-      throw 'You must generate a number before'
+      return phoneNumber
     }
 
-    return `(${this.value.slice(0, 2)}) ${this.value.slice(2, 7)}-${this.value.slice(7)}`
+    if (style === 'international') {
+      const phoneNumber = faker.helpers.fromRegExp(
+        `+55 (${areaCode}) 9[1-9]{4}-[1-9]{4}`,
+      )
+
+      return phoneNumber
+    }
+
+    throw `Invalid phone number style: ${style}`
   }
 }
