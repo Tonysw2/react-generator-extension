@@ -1,5 +1,5 @@
 import { brazilAreaCodes } from '@/const/brazil-area-codes'
-import { faker } from '@faker-js/faker'
+import { simpleFaker } from '@faker-js/faker'
 
 export type PhoneStyle = 'raw' | 'national' | 'international'
 
@@ -28,7 +28,7 @@ export class PhoneGenerator {
     const areaCode = PhoneGenerator.getAreaCode(state)
 
     if (style === 'raw') {
-      const phoneNumber = faker.helpers.fromRegExp(
+      const phoneNumber = simpleFaker.helpers.fromRegExp(
         `${areaCode}9[1-9]{4}[1-9]{4}`,
       )
 
@@ -36,7 +36,7 @@ export class PhoneGenerator {
     }
 
     if (style === 'national') {
-      const phoneNumber = faker.helpers.fromRegExp(
+      const phoneNumber = simpleFaker.helpers.fromRegExp(
         `(${areaCode}) 9[1-9]{4}-[1-9]{4}`,
       )
 
@@ -44,7 +44,7 @@ export class PhoneGenerator {
     }
 
     if (style === 'international') {
-      const phoneNumber = faker.helpers.fromRegExp(
+      const phoneNumber = simpleFaker.helpers.fromRegExp(
         `+55 (${areaCode}) 9[1-9]{4}-[1-9]{4}`,
       )
 
