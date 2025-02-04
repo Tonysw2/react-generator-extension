@@ -18,10 +18,10 @@ export function App() {
   return (
     <Card className="w-full border-none">
       <CardHeader>
-        <CardTitle>🚀 DataGenie – Quick Data Generator</CardTitle>
+        <CardTitle>🚀 DataGenie</CardTitle>
         <CardDescription>
-          Instantly generate names, phone numbers, ZIP codes, and more. Perfect
-          for developers and testers!
+          Gere instantaneamente nomes, números de telefone, CEPs e endereços.
+          Ideal para desenvolvedores e testadores!
         </CardDescription>
       </CardHeader>
 
