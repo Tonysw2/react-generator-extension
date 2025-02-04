@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils'
 import { AddressGenerator } from '@/services/address-generator'
-import { Check, Copy, Terminal, TriangleAlert } from 'lucide-react'
+import { Check, Copy, TriangleAlert } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 import { Button } from './ui/button'
