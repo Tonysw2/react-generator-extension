@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { AddressTab } from './components/address-tab'
 import { PhoneTab } from './components/phone-tab'
 import {
   Card,
@@ -36,6 +37,7 @@ export function App() {
           </TabsList>
 
           <PhoneTab />
+          <AddressTab />
         </Tabs>
       </CardContent>
     </Card>
