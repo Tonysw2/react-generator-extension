@@ -13,7 +13,7 @@ export function PhoneTab() {
   const [cellphone, setCellphone] = useState(() => {
     const storedData = localStorage.getItem(storageKeys.phone)
 
-    return storedData ? JSON.parse(storedData) : ''
+    return storedData ? storedData : ''
   })
   const [copiedSuccessfully, setCopiedSuccessfully] = useState(false)
 
