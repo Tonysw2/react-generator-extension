@@ -1,3 +1,4 @@
+import { storageKeys } from '@/const/storage-keys'
 import { cn } from '@/lib/utils'
 import { PhoneGenerator, type PhoneStyle } from '@/services/phone-generator'
 import { Check, Copy } from 'lucide-react'
@@ -9,7 +10,11 @@ import { TabsContent } from './ui/tabs'
 
 export function PhoneTab() {
   const [state, setState] = useState('')
-  const [cellphone, setCellphone] = useState('')
+  const [cellphone, setCellphone] = useState(() => {
+    const storedData = localStorage.getItem(storageKeys.phone)
+
+    return storedData ? JSON.parse(storedData) : ''
+  })
   const [copiedSuccessfully, setCopiedSuccessfully] = useState(false)
 
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
@@ -23,7 +28,11 @@ export function PhoneTab() {
         timeoutIdRef.current = null
       }
 
-      setCellphone(PhoneGenerator.generate({ state, style }))
+      const generatedPhone = PhoneGenerator.generate({ state, style })
+
+      setCellphone(generatedPhone)
+
+      localStorage.setItem(storageKeys.phone, generatedPhone)
     }
   }
 

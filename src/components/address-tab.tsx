@@ -1,3 +1,4 @@
+import { storageKeys } from '@/const/storage-keys'
 import { cn } from '@/lib/utils'
 import { AddressGenerator } from '@/services/address-generator'
 import { Check, Copy, TriangleAlert } from 'lucide-react'
@@ -22,12 +23,18 @@ export function AddressTab() {
     number: string
     city: string
     state: string
-  }>({
-    zipCode: '',
-    street: '',
-    number: '',
-    city: '',
-    state: '',
+  }>(() => {
+    const storedData = localStorage.getItem(storageKeys.address)
+
+    return storedData
+      ? JSON.parse(storedData)
+      : {
+          zipCode: '',
+          street: '',
+          number: '',
+          city: '',
+          state: '',
+        }
   })
 
   const timeoutIdRef = useRef<NodeJS.Timeout | null>(null)
@@ -46,7 +53,11 @@ export function AddressTab() {
       timeoutIdRef.current = null
     }
 
-    setAddress(AddressGenerator.generate())
+    const generatedAddress = AddressGenerator.generate()
+
+    setAddress(generatedAddress)
+
+    localStorage.setItem(storageKeys.address, JSON.stringify(generatedAddress))
   }
 
   async function handleCopyToClipboard(
