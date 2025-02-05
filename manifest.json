@@ -1,10 +1,19 @@
 {
   "manifest_version": 3,
-  "name": "Hello Extensions",
-  "description": "Base Level Extension",
+  "name": "DataGenie – Gerador de Dados Rápido",
+  "description": "Gere instantaneamente nomes, números de telefone, CEPs e endereços. Ideal para desenvolvedores e testadores!",
   "version": "1.0",
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
   "action": {
-    "default_icon": "icon16.png",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    },
     "default_popup": "./index.html"
   }
 }
